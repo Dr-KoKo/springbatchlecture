@@ -16,54 +16,51 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class DBJobConfiguration {
 
-    @Bean
-    public Job helloJob(JobRepository jobRepository, PlatformTransactionManager txManager) {
-        return new JobBuilder("Job", jobRepository)
-            .start(step1(jobRepository, txManager))
-            .next(step2(jobRepository, txManager))
-            .next(step3(jobRepository, txManager))
-            .build();
-    }
+	@Bean
+	public Job helloJob(JobRepository jobRepository, PlatformTransactionManager txManager) {
+		return new JobBuilder("Job", jobRepository)
+			.start(step1(jobRepository, txManager))
+			.next(step2(jobRepository, txManager))
+			.next(step3(jobRepository, txManager))
+			.build();
+	}
 
-    @Bean
-    public Step step1(JobRepository jobRepository, PlatformTransactionManager txManager) {
-        return new StepBuilder("step1", jobRepository)
-            .tasklet(new Tasklet() {
-                @Override
-                public RepeatStatus execute(StepContribution contribution,
-                    ChunkContext chunkContext) throws Exception {
-                    System.out.println("step1 has executed");
-                    return RepeatStatus.FINISHED;
-                }
-            }, txManager)
-            .build();
-    }
+	@Bean
+	public Step step1(JobRepository jobRepository, PlatformTransactionManager txManager) {
+		return new StepBuilder("step1", jobRepository)
+			.tasklet(new Tasklet() {
+				@Override
+				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+					System.out.println("step1 has executed");
+					return RepeatStatus.FINISHED;
+				}
+			}, txManager)
+			.build();
+	}
 
-    @Bean
-    public Step step2(JobRepository jobRepository, PlatformTransactionManager txManager) {
-        return new StepBuilder("step2", jobRepository)
-            .tasklet(new Tasklet() {
-                @Override
-                public RepeatStatus execute(StepContribution contribution,
-                    ChunkContext chunkContext) throws Exception {
-                    System.out.println("step2 has executed");
-                    return RepeatStatus.FINISHED;
-                }
-            }, txManager)
-            .build();
-    }
+	@Bean
+	public Step step2(JobRepository jobRepository, PlatformTransactionManager txManager) {
+		return new StepBuilder("step2", jobRepository)
+			.tasklet(new Tasklet() {
+				@Override
+				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+					System.out.println("step2 has executed");
+					return RepeatStatus.FINISHED;
+				}
+			}, txManager)
+			.build();
+	}
 
-    @Bean
-    public Step step3(JobRepository jobRepository, PlatformTransactionManager txManager) {
-        return new StepBuilder("step3", jobRepository)
-            .tasklet(new Tasklet() {
-                @Override
-                public RepeatStatus execute(StepContribution contribution,
-                    ChunkContext chunkContext) throws Exception {
-                    System.out.println("step3 has executed");
-                    return RepeatStatus.FINISHED;
-                }
-            }, txManager)
-            .build();
-    }
+	@Bean
+	public Step step3(JobRepository jobRepository, PlatformTransactionManager txManager) {
+		return new StepBuilder("step3", jobRepository)
+			.tasklet(new Tasklet() {
+				@Override
+				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+					System.out.println("step3 has executed");
+					return RepeatStatus.FINISHED;
+				}
+			}, txManager)
+			.build();
+	}
 }
