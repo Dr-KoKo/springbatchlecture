@@ -68,15 +68,7 @@ public class DBJobConfiguration {
 	@Bean
 	public Step step2(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new StepBuilder("step2", jobRepository)
-			.tasklet(new Tasklet() {
-				@Override
-				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-					System.out.println("step2 has executed");
-
-//					throw new RuntimeException("step2 has failed");
-					return RepeatStatus.FINISHED;
-				}
-			}, txManager)
+			.tasklet(new CustomTasklet(), txManager)
 			.build();
 	}
 
