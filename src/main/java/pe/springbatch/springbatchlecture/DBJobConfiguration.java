@@ -72,6 +72,8 @@ public class DBJobConfiguration {
 				@Override
 				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 					System.out.println("step2 has executed");
+
+//					throw new RuntimeException("step2 has failed");
 					return RepeatStatus.FINISHED;
 				}
 			}, txManager)
