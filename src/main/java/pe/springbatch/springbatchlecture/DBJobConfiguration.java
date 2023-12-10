@@ -32,43 +32,27 @@ public class DBJobConfiguration {
 	@Bean
 	public Step step1(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new StepBuilder("step1", jobRepository)
-			.tasklet(new Tasklet() {
-				@Override
-				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-					System.out.println("step1 has executed");
-
-					JobParameters jobParameters1 = contribution.getStepExecution().getJobParameters();
-					String name1 = jobParameters1.getString("name");
-					Long seq1 = jobParameters1.getLong("seq");
-					Date date1 = jobParameters1.getDate("date");
-					Double age1 = jobParameters1.getDouble("age");
-
-					System.out.println("name1 = " + name1);
-					System.out.println("seq1 = " + seq1);
-					System.out.println("date1 = " + date1);
-					System.out.println("age1 = " + age1);
-
-					Map<String, Object> jobParameters2 = chunkContext.getStepContext().getJobParameters();
-					String name2 = (String)jobParameters2.get("name");
-					Long seq2 = (Long)jobParameters2.get("seq");
-					Date date2 = (Date)jobParameters2.get("date");
-					Double age2 = (Double)jobParameters2.get("age");
-
-					System.out.println("name2 = " + name2);
-					System.out.println("seq2 = " + seq2);
-					System.out.println("date2 = " + date2);
-					System.out.println("age2 = " + age2);
-
-					return RepeatStatus.FINISHED;
-				}
-			}, txManager)
+				.tasklet(new Tasklet() {
+					@Override
+					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+						System.out.println("step1 has executed");
+						return RepeatStatus.FINISHED;
+					}
+				}, txManager)
 			.build();
 	}
 
 	@Bean
 	public Step step2(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new StepBuilder("step2", jobRepository)
-			.tasklet(new CustomTasklet(), txManager)
+				.tasklet(new Tasklet() {
+					@Override
+					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+						System.out.println("step2 has executed");
+//						throw new RuntimeException("step2 has failed");
+						return RepeatStatus.FINISHED;
+					}
+				}, txManager)
 			.build();
 	}
 
