@@ -30,7 +30,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
   batch:
     job:
-      name: ${job.name:Job2}
+      name: ${job.name:Job}
       enabled: true
     jdbc:
       initialize-schema: always
