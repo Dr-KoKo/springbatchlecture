@@ -1,6 +1,7 @@
 package pe.springbatch.springbatchlecture;
 
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.job.DefaultJobParametersValidator;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -12,13 +13,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class StartNextConfiguration {
+public class ValidatorConfiguration {
 	@Bean
 	public Job batchJob(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new JobBuilder("Job", jobRepository)
 			.start(step1(jobRepository, txManager))
 			.next(step2(jobRepository, txManager))
 			.next(step3(jobRepository, txManager))
+			.validator(new CustomJobParameterValidator())
+			.validator(new DefaultJobParametersValidator(new String[]{"name", "date"}, new String[]{"count"}))
 			.build();
 	}
 
