@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class SimpleJobConfiguration {
+public class StartNextConfiguration {
 	@Bean
 	public Job batchJob(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new JobBuilder("Job", jobRepository)
