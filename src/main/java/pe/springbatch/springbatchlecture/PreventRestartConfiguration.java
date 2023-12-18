@@ -13,15 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class ValidatorConfiguration {
+public class PreventRestartConfiguration {
 	@Bean
 	public Job batchJob(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new JobBuilder("Job", jobRepository)
 			.start(step1(jobRepository, txManager))
 			.next(step2(jobRepository, txManager))
-			.next(step3(jobRepository, txManager))
-			.validator(new CustomJobParameterValidator())
-			.validator(new DefaultJobParametersValidator(new String[]{"name", "date"}, new String[]{"count"}))
+			.preventRestart()
 			.build();
 	}
 
@@ -45,22 +43,8 @@ public class ValidatorConfiguration {
 				@Override
 				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 					System.out.println("step2 has executed");
-					return RepeatStatus.FINISHED;
-				}
-			}, txManager)
-			.build();
-	}
-
-	@Bean
-	public Step step3(JobRepository jobRepository, PlatformTransactionManager txManager) {
-		return new StepBuilder("step3", jobRepository)
-			.tasklet(new Tasklet() {
-				@Override
-				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-					System.out.println("step3 has executed");
-					chunkContext.getStepContext().getStepExecution().setStatus(BatchStatus.FAILED);
-					contribution.setExitStatus(ExitStatus.STOPPED);
-					return RepeatStatus.FINISHED;
+					// return RepeatStatus.FINISHED;
+					throw new RuntimeException("step2 was failed");
 				}
 			}, txManager)
 			.build();
