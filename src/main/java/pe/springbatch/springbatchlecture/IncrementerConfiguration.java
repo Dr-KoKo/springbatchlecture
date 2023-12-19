@@ -1,8 +1,10 @@
 package pe.springbatch.springbatchlecture;
 
-import org.springframework.batch.core.*;
-import org.springframework.batch.core.job.DefaultJobParametersValidator;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -13,13 +15,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class PreventRestartConfiguration {
+public class IncrementerConfiguration {
 	@Bean
 	public Job batchJob(JobRepository jobRepository, PlatformTransactionManager txManager) {
 		return new JobBuilder("Job", jobRepository)
 			.start(step1(jobRepository, txManager))
 			.next(step2(jobRepository, txManager))
-			.preventRestart()
+			//			.incrementer(new CustomJobParametersIncrementer())
+			.incrementer(new RunIdIncrementer())
 			.build();
 	}
 
@@ -43,8 +46,7 @@ public class PreventRestartConfiguration {
 				@Override
 				public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 					System.out.println("step2 has executed");
-					// return RepeatStatus.FINISHED;
-					throw new RuntimeException("step2 was failed");
+					return RepeatStatus.FINISHED;
 				}
 			}, txManager)
 			.build();
